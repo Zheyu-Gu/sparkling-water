@@ -27,7 +27,10 @@ import hex.deeplearning.DeepLearningModel.DeepLearningParameters
 import hex.schemas._
 import hex.tree.gbm.GBMModel.GBMParameters
 import hex.glm.GLMModel.GLMParameters
+import hex.grid.HyperSpaceSearchCriteria
+import hex.grid.HyperSpaceSearchCriteria._
 import hex.kmeans.KMeansModel.KMeansParameters
+import hex.schemas.HyperSpaceSearchCriteriaV99.{CartesianSearchCriteriaV99, RandomDiscreteValueSearchCriteriaV99}
 import hex.tree.drf.DRFModel.DRFParameters
 import hex.tree.xgboost.XGBoostModel.XGBoostParameters
 import water.automl.api.schemas3.AutoMLBuildSpecV99._
@@ -50,12 +53,12 @@ object Runner {
       ("H2OKMeansParams", classOf[KMeansV3.KMeansParametersV3], classOf[KMeansParameters], Seq(userPoints)))
 
     algorithmParameters.map {
-      case (entityName, h2oSchemaClass: Class[_], h2oParametersClass: Class[_], explicitFields) =>
+      case (entityName, h2oSchemaClass: Class[_], h2oParameterClass: Class[_], explicitFields) =>
         ParameterSubstitutionContext(
           namespace = "ai.h2o.sparkling.ml.params",
           entityName,
           h2oSchemaClass,
-          h2oParametersClass,
+          h2oParameterClass,
           IgnoredParameters.all,
           explicitFields,
           explicitDefaultValues,
@@ -96,18 +99,51 @@ object Runner {
       ("H2OAutoMLBuildModelsParams", classOf[AutoMLBuildModelsV99], classOf[AutoMLBuildModels], Field))
 
     autoMLParameters.map {
-      case (entityName, h2oSchemaClass: Class[_], h2oParametersClass: Class[_], source: DefaultValueSource) =>
+      case (entityName, h2oSchemaClass: Class[_], h2oParameterClass: Class[_], source: DefaultValueSource) =>
         ParameterSubstitutionContext(
           namespace = "ai.h2o.sparkling.ml.params",
           entityName,
           h2oSchemaClass,
-          h2oParametersClass,
+          h2oParameterClass,
           AutoMLIgnoredParameters.all,
           explicitFields = Seq.empty,
           explicitDefaultValues = Map("include_algos" -> "ai.h2o.automl.Algo.values().map(_.name())"),
           defaultValueFieldPrefix = "",
           typeExceptions = AutoMLTypeExceptions.all(),
           defaultValueSource = source,
+          generateParamTag = false)
+    }
+  }
+
+  private def gridSearchParameterConfiguration: Seq[ParameterSubstitutionContext] = {
+    class DummySearchCriteria extends HyperSpaceSearchCriteriaV99[HyperSpaceSearchCriteria, DummySearchCriteria]
+
+    val gridSearchParameters = Seq[(String, Class[_], Class[_], Seq[String])](
+      ("H2OGridSearchRandomDiscreteCriteriaParams",
+        classOf[RandomDiscreteValueSearchCriteriaV99],
+        classOf[RandomDiscreteValueSearchCriteria],
+        Seq("strategy")),
+      ("H2OGridSearchCartesianCriteriaParams",
+        classOf[CartesianSearchCriteriaV99],
+        classOf[CartesianSearchCriteria],
+        Seq("strategy")),
+      ("H2OGridSearchCommonCriteriaParams",
+        classOf[DummySearchCriteria],
+        classOf[CartesianSearchCriteria],
+        Seq.empty))
+
+    gridSearchParameters.map {
+      case (entityName, h2oSchemaClass: Class[_], h2oParameterClass: Class[_], extraIgnoredParameters) =>
+        ParameterSubstitutionContext(
+          namespace = "ai.h2o.sparkling.ml.params",
+          entityName,
+          h2oSchemaClass,
+          h2oParameterClass,
+          GridSearchIgnoredParameters.all ++ extraIgnoredParameters,
+          explicitFields = Seq.empty,
+          explicitDefaultValues = Map.empty,
+          typeExceptions = Map.empty,
+          defaultValueSource = DefaultValueSource.Getter,
           generateParamTag = false)
     }
   }
@@ -142,6 +178,11 @@ object Runner {
     }
 
     for (substitutionContext <- autoMLParameterConfiguration) {
+      val content = ParametersTemplate(substitutionContext)
+      writeResultToFile(content, substitutionContext, language, destinationDir)
+    }
+
+    for (substitutionContext <- gridSearchParameterConfiguration) {
       val content = ParametersTemplate(substitutionContext)
       writeResultToFile(content, substitutionContext, language, destinationDir)
     }

@@ -55,19 +55,13 @@ class H2OGridSearch(override val uid: String)
   private var gridModels: Array[H2OMOJOModel] = _
 
   private def getSearchCriteria(): String = {
-    val criteria = HyperSpaceSearchCriteria.Strategy.valueOf(getStrategy()) match {
-      case HyperSpaceSearchCriteria.Strategy.RandomDiscrete =>
-        Map(
-          "strategy" -> HyperSpaceSearchCriteria.Strategy.RandomDiscrete.name(),
-          "stopping_tolerance" -> getStoppingTolerance(),
-          "stopping_rounds" -> getStoppingRounds(),
-          "stopping_metric" -> getStoppingMetric(),
-          "seed" -> getSeed(),
-          "max_models" -> getMaxModels(),
-          "max_runtime_secs" -> getMaxRuntimeSecs())
-      case _ => Map("strategy" -> HyperSpaceSearchCriteria.Strategy.Cartesian.name())
+    val commonCriteria = getH2OGridSearchCommonCriteriaParams()
+    val specificCriteria = HyperSpaceSearchCriteria.Strategy.valueOf(getStrategy()) match {
+      case HyperSpaceSearchCriteria.Strategy.RandomDiscrete => getH2OGridSearchRandomDiscreteCriteriaParams()
+      case _ => getH2OGridSearchCartesianCriteriaParams()
     }
-    criteria.map { case (key, value) => s"'$key': $value" }.mkString("{", ",", "}")
+
+    (commonCriteria ++ specificCriteria).map { case (key, value) => s"'$key': $value" }.mkString("{", ",", "}")
   }
 
   private def getAlgoParams(
