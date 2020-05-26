@@ -37,12 +37,13 @@ import water.automl.api.schemas3.AutoMLBuildSpecV99._
 
 object Runner {
 
-  private val explicitDefaultValues = Map("max_w2" -> "java.lang.Float.MAX_VALUE")
-
   private def parametersConfiguration: Seq[ParameterSubstitutionContext] = {
     val monotonicity = ExplicitField("monotone_constraints", "HasMonotoneConstraints")
     val userPoints = ExplicitField("user_points", "HasUserPoints")
     type DeepLearningParametersV3 = DeepLearningV3.DeepLearningParametersV3
+
+    val explicitDefaultValues =
+      Map("max_w2" -> "java.lang.Float.MAX_VALUE", "response_column" -> """"label"""", "model_id" -> "null")
 
     val algorithmParameters = Seq[(String, Class[_], Class[_], Seq[ExplicitField])](
       ("H2OXGBoostParams", classOf[XGBoostV3.XGBoostParametersV3], classOf[XGBoostParameters], Seq(monotonicity)),
@@ -62,7 +63,7 @@ object Runner {
           IgnoredParameters.all,
           explicitFields,
           explicitDefaultValues,
-          typeExceptions = Map.empty,
+          typeExceptions = TypeExceptions.all(),
           defaultValueSource = DefaultValueSource.Field,
           generateParamTag = true)
     }
@@ -107,7 +108,8 @@ object Runner {
           h2oParameterClass,
           AutoMLIgnoredParameters.all,
           explicitFields = Seq.empty,
-          explicitDefaultValues = Map("include_algos" -> "ai.h2o.automl.Algo.values().map(_.name())"),
+          explicitDefaultValues =
+            Map("include_algos" -> "ai.h2o.automl.Algo.values().map(_.name())", "response_column" -> """"label""""),
           defaultValueFieldPrefix = "",
           typeExceptions = AutoMLTypeExceptions.all(),
           defaultValueSource = source,
@@ -138,7 +140,7 @@ object Runner {
           entityName,
           h2oSchemaClass,
           h2oParameterClass,
-          GridSearchIgnoredParameters.all ++ extraIgnoredParameters,
+          ignoredParameters = Seq("__meta") ++ extraIgnoredParameters,
           explicitFields = Seq.empty,
           explicitDefaultValues = Map.empty,
           typeExceptions = Map.empty,

@@ -14,27 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ai.h2o.sparkling.ml.params
 
-import org.apache.spark.ml.param._
+package ai.h2o.sparkling.api.generation.common
 
-/**
-  * This trait contains parameters that are shared across all supervised algorithms.
-  */
-trait H2OCommonSupervisedParams extends H2OSupervisedMOJOParams with H2OCommonParams {
-
-  protected final val labelCol = new Param[String](this, "labelCol", "Label column name")
-
-  setDefault(labelCol -> "label")
-
-  def getLabelCol(): String = $(labelCol)
-
-  def setLabelCol(columnName: String): this.type = set(labelCol, columnName)
-
-  def setOffsetCol(columnName: String): this.type = set(offsetCol, columnName)
-
-  override protected def getExcludedCols(): Seq[String] = {
-    Seq(getLabelCol(), getFoldCol(), getWeightCol(), getOffsetCol())
-      .flatMap(Option(_)) // Remove nulls
-  }
+trait TypeExceptionsBase {
+  def all(): Map[String, Class[_]] =
+    Map(
+      "model_id" -> classOf[String],
+      "response_column" -> classOf[String],
+      "fold_column" -> classOf[String],
+      "weights_column" -> classOf[String],
+      "offset_column" -> classOf[String])
 }
+
+object TypeExceptions extends TypeExceptionsBase

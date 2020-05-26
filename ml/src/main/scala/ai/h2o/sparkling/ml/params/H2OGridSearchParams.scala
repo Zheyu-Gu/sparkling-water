@@ -27,7 +27,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 trait H2OGridSearchParams
-  extends H2OCommonSupervisedParams
+  extends H2OCommonParams
   with H2OGridSearchRandomDiscreteCriteriaParams
   with H2OGridSearchCartesianCriteriaParams
   with H2OGridSearchCommonCriteriaParams {
@@ -97,4 +97,9 @@ trait H2OGridSearchParams
   def setParallelism(value: Int): this.type = set(parallelism, value)
 
   def setNfolds(value: Int): this.type = set(nfolds, value)
+
+  override private[sparkling] def getExcludedCols(): Seq[String] = {
+    val algo = getAlgo()
+    if (algo == null) Seq.empty else algo.getExcludedCols()
+  }
 }

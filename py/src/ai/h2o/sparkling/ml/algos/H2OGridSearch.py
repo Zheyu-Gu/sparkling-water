@@ -39,13 +39,8 @@ class H2OGridSearch(H2OGridSearchParams, H2OSupervisedAlgoBase):
                  stoppingMetric="AUTO",
                  selectBestModelBy="AUTO",
                  parallelism=1,
-                 labelCol="label",
-                 foldCol=None,
-                 weightCol=None,
-                 offsetCol=None,
                  splitRatio=1.0,
                  seed=-1,
-                 nfolds=0,
                  columnsToCategorical=[],
                  predictionCol="prediction",
                  detailedPredictionCol="detailed_prediction",
@@ -53,8 +48,7 @@ class H2OGridSearch(H2OGridSearchParams, H2OSupervisedAlgoBase):
                  featuresCols=[],
                  convertUnknownCategoricalLevelsToNa=False,
                  convertInvalidNumbersToNa=False,
-                 namedMojoOutputColumns=True,
-                 **DeprecatedParams):
+                 namedMojoOutputColumns=True):
         Initializer.load_sparkling_jar()
         super(H2OGridSearch, self).__init__()
         self._java_obj = self._new_java_obj("ai.h2o.sparkling.ml.algos.H2OGridSearch", self.uid)

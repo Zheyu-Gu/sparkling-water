@@ -69,17 +69,8 @@ class H2OGridSearch(override val uid: String)
       train: H2OFrame,
       valid: Option[H2OFrame]): Map[String, Any] = {
     algo.getH2OAlgorithmParams() ++
-      Map(
-        "nfolds" -> getNfolds(),
-        "fold_column" -> getFoldCol(),
-        "response_column" -> getLabelCol(),
-        "weights_column" -> getWeightCol(),
-        "training_frame" -> train.frameId) ++
-      valid
-        .map { fr =>
-          Map("validation_frame" -> fr.frameId)
-        }
-        .getOrElse(Map())
+      Map("training_frame" -> train.frameId) ++
+      valid.map(fr => Map("validation_frame" -> fr.frameId)).getOrElse(Map())
   }
 
   private def prepareHyperParameters(): String = {
@@ -268,5 +259,4 @@ object H2OGridSearch extends H2OParamsReadable[H2OGridSearch] {
       }
     }
   }
-
 }

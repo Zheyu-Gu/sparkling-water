@@ -15,12 +15,12 @@
 # limitations under the License.
 #
 
-from ai.h2o.sparkling.ml.params.H2OCommonSupervisedParams import H2OCommonSupervisedParams
+from ai.h2o.sparkling.ml.params.H2OCommonParams import H2OCommonParams
 from ai.h2o.sparkling.ml.params.H2OTypeConverters import H2OTypeConverters
 from pyspark.ml.param import *
 
 
-class H2OGridSearchParams(H2OCommonSupervisedParams):
+class H2OGridSearchParams(H2OCommonParams):
     ##
     # Param definitions
     ##
