@@ -60,7 +60,7 @@ object Runner {
           entityName,
           h2oSchemaClass,
           h2oParameterClass,
-          IgnoredParameters.all,
+          IgnoredParameters.all ++ (if (entityName == "H2OKMeansParams") Seq("response_column") else Seq.empty),
           explicitFields,
           explicitDefaultValues,
           typeExceptions = TypeExceptions.all(),
