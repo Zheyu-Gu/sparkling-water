@@ -119,18 +119,17 @@ object Runner {
     class DummySearchCriteria extends HyperSpaceSearchCriteriaV99[HyperSpaceSearchCriteria, DummySearchCriteria]
 
     val gridSearchParameters = Seq[(String, Class[_], Class[_], Seq[String])](
-      ("H2OGridSearchRandomDiscreteCriteriaParams",
+      (
+        "H2OGridSearchRandomDiscreteCriteriaParams",
         classOf[RandomDiscreteValueSearchCriteriaV99],
         classOf[RandomDiscreteValueSearchCriteria],
         Seq("strategy")),
-      ("H2OGridSearchCartesianCriteriaParams",
+      (
+        "H2OGridSearchCartesianCriteriaParams",
         classOf[CartesianSearchCriteriaV99],
         classOf[CartesianSearchCriteria],
         Seq("strategy")),
-      ("H2OGridSearchCommonCriteriaParams",
-        classOf[DummySearchCriteria],
-        classOf[CartesianSearchCriteria],
-        Seq.empty))
+      ("H2OGridSearchCommonCriteriaParams", classOf[DummySearchCriteria], classOf[CartesianSearchCriteria], Seq.empty))
 
     gridSearchParameters.map {
       case (entityName, h2oSchemaClass: Class[_], h2oParameterClass: Class[_], extraIgnoredParameters) =>
