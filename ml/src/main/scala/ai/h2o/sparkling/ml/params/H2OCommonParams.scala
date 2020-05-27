@@ -21,7 +21,7 @@ import org.apache.spark.ml.param._
 /**
   * This trait contains parameters that are shared across all algorithms.
   */
-trait H2OCommonParams extends H2OMOJOAlgoSharedParams with H2OAlgoParamsBase {
+trait H2OCommonParams extends H2OBaseMOJOParams with H2OAlgoParamsBase {
 
   protected final val splitRatio = new DoubleParam(
     this,
