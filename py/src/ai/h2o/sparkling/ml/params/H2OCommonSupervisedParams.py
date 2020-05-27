@@ -23,59 +23,17 @@ from ai.h2o.sparkling.ml.params.H2OTypeConverters import H2OTypeConverters
 
 
 class H2OCommonSupervisedParams(H2OCommonParams, H2OSupervisedMOJOParams):
-    foldCol = Param(
-        Params._dummy(),
-        "foldCol",
-        "Fold column name",
-        H2OTypeConverters.toNullableString())
-
-    weightCol = Param(
-        Params._dummy(),
-        "weightCol",
-        "Weight column name",
-        H2OTypeConverters.toNullableString())
-
     labelCol = Param(
         Params._dummy(),
         "labelCol",
         "Label column name",
         H2OTypeConverters.toString())
 
-    nfolds = Param(
-        Params._dummy(),
-        "nfolds",
-        "Number of fold columns",
-        H2OTypeConverters.toInt())
-
-    ##
-    # Getters
-    ##
     def getLabelCol(self):
         return self.getOrDefault(self.labelCol)
 
-    def getFoldCol(self):
-        return self.getOrDefault(self.foldCol)
-
-    def getWeightCol(self):
-        return self.getOrDefault(self.weightCol)
-
-    def getNfolds(self):
-        return self.getOrDefault(self.nfolds)
-
-    ##
-    # Setters
-    ##
     def setLabelCol(self, value):
         return self._set(labelCol=value)
 
     def setOffsetCol(self, value):
         return self._set(offsetCol=value)
-
-    def setFoldCol(self, value):
-        return self._set(foldCol=value)
-
-    def setWeightCol(self, value):
-        return self._set(weightCol=value)
-
-    def setNfolds(self, value):
-        return self._set(nfolds=value)

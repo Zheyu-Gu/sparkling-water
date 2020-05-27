@@ -152,11 +152,15 @@ object HamOrSpamDemo {
 
   def gridSearch(): H2OGridSearch = {
     val hyperParams = Map("_ntrees" -> Array(1, 30).map(_.asInstanceOf[AnyRef]))
-    new H2OGridSearch()
-      .setHyperParameters(hyperParams)
+    val algo = new H2OGBM()
+      .setMaxDepth(6)
+      .setSeed(1)
+      .setLabelCol("label")
       .setFeaturesCols("tf_idf")
       .setConvertUnknownCategoricalLevelsToNa(true)
-      .setAlgo(new H2OGBM().setMaxDepth(6).setSeed(1).setLabelCol("label"))
+    new H2OGridSearch()
+      .setHyperParameters(hyperParams)
+      .setAlgo(algo)
   }
 
   def xgboost(): H2OXGBoost = {

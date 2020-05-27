@@ -18,48 +18,7 @@
 from pyspark.ml.param import *
 
 from ai.h2o.sparkling.ml.params.H2OCommonParams import H2OCommonParams
-from ai.h2o.sparkling.ml.params.H2OTypeConverters import H2OTypeConverters
 
 
 class H2OCommonUnsupervisedParams(H2OCommonParams):
-    foldCol = Param(
-        Params._dummy(),
-        "foldCol",
-        "Fold column name",
-        H2OTypeConverters.toNullableString())
-
-    weightCol = Param(
-        Params._dummy(),
-        "weightCol",
-        "Weight column name",
-        H2OTypeConverters.toNullableString())
-
-    nfolds = Param(
-        Params._dummy(),
-        "nfolds",
-        "Number of fold columns",
-        H2OTypeConverters.toInt())
-
-    ##
-    # Getters
-    ##
-    def getFoldCol(self):
-        return self.getOrDefault(self.foldCol)
-
-    def getWeightCol(self):
-        return self.getOrDefault(self.weightCol)
-
-    def getNfolds(self):
-        return self.getOrDefault(self.nfolds)
-
-    ##
-    # Setters
-    ##
-    def setFoldCol(self, value):
-        return self._set(foldCol=value)
-
-    def setWeightCol(self, value):
-        return self._set(weightCol=value)
-
-    def setNfolds(self, value):
-        return self._set(nfolds=value)
+    pass

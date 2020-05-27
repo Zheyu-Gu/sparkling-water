@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package ai.h2o.sparkling.ml.params
 
 import java.util
@@ -27,8 +28,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 trait H2OGridSearchParams
-  extends H2OCommonParams
-  with H2OGridSearchRandomDiscreteCriteriaParams
+  extends H2OGridSearchRandomDiscreteCriteriaParams
   with H2OGridSearchCartesianCriteriaParams
   with H2OGridSearchCommonCriteriaParams {
 
@@ -91,9 +91,4 @@ trait H2OGridSearchParams
   }
 
   def setParallelism(value: Int): this.type = set(parallelism, value)
-
-  override private[sparkling] def getExcludedCols(): Seq[String] = {
-    val algo = getAlgo()
-    if (algo == null) Seq.empty else algo.getExcludedCols()
-  }
 }

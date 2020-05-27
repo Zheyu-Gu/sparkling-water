@@ -34,7 +34,7 @@ def testParamsPassedBySetters():
 
 
 def gridSearchTester(algo, prostateDataset):
-    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, splitRatio=0.8, algo=algo.setLabelCol("AGE"),
+    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, algo=algo.setLabelCol("AGE").setSplitRatio(0.8),
                          strategy="RandomDiscrete", maxModels=3, maxRuntimeSecs=60, selectBestModelBy="RMSE")
 
     pipeline = Pipeline(stages=[grid])
@@ -68,7 +68,7 @@ def testPipelineSerializationDRF(prostateDataset):
 
 
 def testGetGridModelsParams(prostateDataset):
-    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, splitRatio=0.8, algo=H2OGBM(labelCol="AGE"),
+    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, algo=H2OGBM(splitRatio=0.8, labelCol="AGE"),
                          strategy="RandomDiscrete", maxModels=3, maxRuntimeSecs=60, selectBestModelBy="RMSE")
 
     grid.fit(prostateDataset)
@@ -78,7 +78,7 @@ def testGetGridModelsParams(prostateDataset):
     params.collect() # try materializing
 
 def testGetGridModelsNoParams(prostateDataset):
-    grid = H2OGridSearch(splitRatio=0.8, algo=H2OGBM(labelCol="AGE"),
+    grid = H2OGridSearch(algo=H2OGBM(splitRatio=0.8, labelCol="AGE"),
                          strategy="RandomDiscrete", maxModels=3, maxRuntimeSecs=60, selectBestModelBy="RMSE")
 
     grid.fit(prostateDataset)
@@ -88,7 +88,7 @@ def testGetGridModelsNoParams(prostateDataset):
     params.collect() # try materializing
 
 def testGetGridModelsMetrics(prostateDataset):
-    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, splitRatio=0.8, algo=H2OGBM(labelCol="AGE"),
+    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, algo=H2OGBM(splitRatio=0.8, labelCol="AGE"),
                          strategy="RandomDiscrete", maxModels=3, maxRuntimeSecs=60, selectBestModelBy="RMSE")
 
     grid.fit(prostateDataset)
@@ -98,7 +98,7 @@ def testGetGridModelsMetrics(prostateDataset):
     metrics.collect() # try materializing
 
 def testGetGridModels(prostateDataset):
-    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, splitRatio=0.8, algo=H2OGBM(labelCol="AGE"),
+    grid = H2OGridSearch(hyperParameters={"_seed": [1, 2, 3]}, algo=H2OGBM(splitRatio=0.8, labelCol="AGE"),
                          strategy="RandomDiscrete", maxModels=3, maxRuntimeSecs=60, selectBestModelBy="RMSE")
 
     grid.fit(prostateDataset)

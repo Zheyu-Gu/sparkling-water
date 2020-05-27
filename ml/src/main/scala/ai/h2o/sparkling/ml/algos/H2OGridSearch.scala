@@ -117,7 +117,7 @@ class H2OGridSearch(override val uid: String)
     val endpoint = RestApiUtils.getClusterEndpoint(conf)
     val skippedFields = Seq((classOf[GridSchemaV99], "summary_table"), (classOf[GridSchemaV99], "scoring_history"))
     val grid = query[GridSchemaV99](endpoint, s"/99/Grids/$gridId", conf, Map.empty, skippedFields)
-    val modelSettings = H2OMOJOSettings.createFromModelParams(this)
+    val modelSettings = H2OMOJOSettings.createFromModelParams(getAlgo())
     grid.model_ids.map { modelId =>
       H2OModel(modelId.name).toMOJOModel(Identifiable.randomUID(algoName), modelSettings, internalFeatureCols)
     }
@@ -232,6 +232,15 @@ class H2OGridSearch(override val uid: String)
   }
 
   override def copy(extra: ParamMap): this.type = defaultCopy(extra)
+
+  private[sparkling] def getColumnsToCategorical(): Array[String] = getAlgo().getColumnsToCategorical()
+  private[sparkling] def getExcludedCols(): Seq[String] = getAlgo().getExcludedCols()
+  private[sparkling] def getFeaturesCols(): Array[String] = getAlgo().getFeaturesCols()
+  private[sparkling] def getSplitRatio(): Double = getAlgo().getSplitRatio()
+  private[sparkling] def setFeaturesCols(value: Array[String]): this.type = {
+    getAlgo().setFeaturesCols(value)
+    this
+  }
 }
 
 object H2OGridSearch extends H2OParamsReadable[H2OGridSearch] {

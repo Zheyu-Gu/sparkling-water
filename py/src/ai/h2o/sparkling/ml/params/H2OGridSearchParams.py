@@ -15,12 +15,11 @@
 # limitations under the License.
 #
 
-from ai.h2o.sparkling.ml.params.H2OCommonParams import H2OCommonParams
 from ai.h2o.sparkling.ml.params.H2OTypeConverters import H2OTypeConverters
 from pyspark.ml.param import *
 
 
-class H2OGridSearchParams(H2OCommonParams):
+class H2OGridSearchParams:
     ##
     # Param definitions
     ##
@@ -87,6 +86,12 @@ class H2OGridSearchParams(H2OCommonParams):
            n>1 -> n models will be built in parallel if possible""",
         H2OTypeConverters.toInt())
 
+    seed = Param(
+        Params._dummy(),
+        "seed",
+        "Used to specify seed to reproduce the model run",
+        H2OTypeConverters.toInt())
+
     ##
     # Getters
     ##
@@ -143,6 +148,9 @@ class H2OGridSearchParams(H2OCommonParams):
     def getParallelism(self):
         return self.getOrDefault(self.parallelism)
 
+    def getSeed(self):
+        return self.getOrDefault(self.seed)
+
     ##
     # Setters
     ##
@@ -175,3 +183,6 @@ class H2OGridSearchParams(H2OCommonParams):
 
     def setParallelism(self, value):
         return self._set(parallelism=value)
+
+    def setSeed(self, value):
+        return self._set(seed=value)

@@ -21,6 +21,7 @@ import ai.h2o.sparkling.backend.exceptions.RestApiCommunicationException
 import ai.h2o.sparkling.backend.utils.RestCommunication
 import ai.h2o.sparkling.ml.internals.H2OModel
 import ai.h2o.sparkling.ml.models.{H2OMOJOModel, H2OMOJOSettings}
+import ai.h2o.sparkling.ml.params.H2OCommonParams
 import hex.Model
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.ml.Estimator
@@ -36,6 +37,7 @@ import scala.reflect.ClassTag
   */
 abstract class H2OAlgorithm[P <: Model.Parameters: ClassTag]
   extends Estimator[H2OMOJOModel]
+  with H2OCommonParams
   with H2OAlgoCommonUtils
   with DefaultParamsWritable
   with RestCommunication {
